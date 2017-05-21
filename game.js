@@ -16,7 +16,7 @@ KEY_CODES = {
   80: 'p'
 }
 
-KEY_STATUS = { keyDown:false };
+KEY_STATUS = { keyDown: false };
 for (code in KEY_CODES) {
   KEY_STATUS[KEY_CODES[code]] = false;
 }
@@ -45,11 +45,11 @@ Matrix = function (rows, columns) {
   }
 
   this.configure = function (rot, scale, transx, transy) {
-    var rad = (rot * Math.PI)/180;
+    var rad = (rot * Math.PI) / 180;
     var sin = Math.sin(rad) * scale;
     var cos = Math.cos(rad) * scale;
     this.set(cos, -sin, transx,
-             sin,  cos, transy);
+      sin, cos, transy);
   };
 
   this.set = function () {
@@ -76,45 +76,45 @@ Matrix = function (rows, columns) {
 
 Sprite = function () {
   this.init = function (name, points) {
-    this.name     = name;
-    this.points   = points;
+    this.name = name;
+    this.points = points;
 
     this.vel = {
-      x:   0,
-      y:   0,
+      x: 0,
+      y: 0,
       rot: 0
     };
 
     this.acc = {
-      x:   0,
-      y:   0,
+      x: 0,
+      y: 0,
       rot: 0
     };
   };
 
   this.children = {};
 
-  this.color    = 'black';
-  this.solid    = false;
-  this.visible  = false;
-  this.reap     = false;
+  this.color = 'black';
+  this.solid = false;
+  this.visible = false;
+  this.reap = false;
   this.bridgesH = true;
   this.bridgesV = true;
 
   this.collidesWith = [];
 
-  this.x     = 0;
-  this.y     = 0;
-  this.rot   = 0;
+  this.x = 0;
+  this.y = 0;
+  this.rot = 0;
   this.scale = 1;
 
   this.currentNode = null;
-  this.nextSprite  = null;
+  this.nextSprite = null;
 
-  this.preMove  = null;
+  this.preMove = null;
   this.postMove = null;
 
-  this.run = function(delta) {
+  this.run = function (delta) {
 
     this.move(delta);
     this.updateGrid();
@@ -153,9 +153,9 @@ Sprite = function () {
       }
     }
     if (this.bridgesH && this.bridgesV &&
-        this.currentNode &&
-        this.currentNode.dupe.vertical &&
-        this.currentNode.dupe.horizontal) {
+      this.currentNode &&
+      this.currentNode.dupe.vertical &&
+      this.currentNode.dupe.horizontal) {
       this.x += this.currentNode.dupe.horizontal;
       this.y += this.currentNode.dupe.vertical;
       this.context.save();
@@ -198,8 +198,8 @@ Sprite = function () {
     var gridy = Math.floor(this.y / GRID_SIZE);
     gridx = (gridx >= this.grid.length) ? 0 : gridx;
     gridy = (gridy >= this.grid[0].length) ? 0 : gridy;
-    gridx = (gridx < 0) ? this.grid.length-1 : gridx;
-    gridy = (gridy < 0) ? this.grid[0].length-1 : gridy;
+    gridx = (gridx < 0) ? this.grid.length - 1 : gridx;
+    gridy = (gridy < 0) ? this.grid[0].length - 1 : gridy;
     var newNode = this.grid[gridx][gridy];
     if (newNode != this.currentNode) {
       if (this.currentNode) {
@@ -212,7 +212,7 @@ Sprite = function () {
     if (KEY_STATUS.g && this.currentNode) {
       this.context.lineWidth = 3.0;
       this.context.strokeStyle = 'green';
-      this.context.strokeRect(gridx*GRID_SIZE+2, gridy*GRID_SIZE+2, GRID_SIZE-4, GRID_SIZE-4);
+      this.context.strokeRect(gridx * GRID_SIZE + 2, gridy * GRID_SIZE + 2, GRID_SIZE - 4, GRID_SIZE - 4);
       this.context.strokeStyle = 'black';
       this.context.lineWidth = 1.0;
     }
@@ -220,7 +220,7 @@ Sprite = function () {
   this.configureTransform = function () {
     if (!this.visible) return;
 
-    var rad = (this.rot * Math.PI)/180;
+    var rad = (this.rot * Math.PI) / 180;
 
     this.context.translate(this.x, this.y);
     this.context.rotate(rad);
@@ -241,8 +241,8 @@ Sprite = function () {
     this.context.beginPath();
 
     this.context.moveTo(this.points[0], this.points[1]);
-    for (var i = 1; i < this.points.length/2; i++) {
-      var xi = i*2;
+    for (var i = 1; i < this.points.length / 2; i++) {
+      var xi = i * 2;
       var yi = xi + 1;
       this.context.lineTo(this.points[xi], this.points[yi]);
     }
@@ -279,14 +279,14 @@ Sprite = function () {
   };
   this.checkCollision = function (other) {
     if (!other.visible ||
-         this == other ||
-         this.collidesWith.indexOf(other.name) == -1) return;
+      this == other ||
+      this.collidesWith.indexOf(other.name) == -1) return;
     var trans = other.transformedPoints();
     var px, py;
-    var count = trans.length/2;
+    var count = trans.length / 2;
     for (var i = 0; i < count; i++) {
-      px = trans[i*2];
-      py = trans[i*2 + 1];
+      px = trans[i * 2];
+      py = trans[i * 2 + 1];
       // mozilla doesn't take into account transforms with isPointInPath >:-P
       if (($.browser.mozilla) ? this.pointInPolygon(px, py) : this.context.isPointInPath(px, py)) {
         other.collision(this);
@@ -304,8 +304,8 @@ Sprite = function () {
       y0 = points[i + 1];
       y1 = points[j + 1];
       if ((y0 < y && y1 >= y) ||
-          (y1 < y && y0 >= y)) {
-        if (points[i]+(y-y0)/(y1-y0)*(points[j]-points[i]) < x) {
+        (y1 < y && y0 >= y)) {
+        if (points[i] + (y - y0) / (y1 - y0) * (points[j] - points[i]) < x) {
           oddNodes = !oddNodes;
         }
       }
@@ -328,8 +328,8 @@ Sprite = function () {
     if (this.transPoints) return this.transPoints;
     var trans = new Array(this.points.length);
     this.matrix.configure(this.rot, this.scale, this.x, this.y);
-    for (var i = 0; i < this.points.length/2; i++) {
-      var xi = i*2;
+    for (var i = 0; i < this.points.length / 2; i++) {
+      var xi = i * 2;
       var yi = xi + 1;
       var pts = this.matrix.multiply(this.points[xi], this.points[yi], 1);
       trans[xi] = pts[0];
@@ -349,14 +349,14 @@ Sprite = function () {
       cn = this.grid[gridx][gridy];
     }
     return (cn.isEmpty(this.collidesWith) &&
-            cn.north.isEmpty(this.collidesWith) &&
-            cn.south.isEmpty(this.collidesWith) &&
-            cn.east.isEmpty(this.collidesWith) &&
-            cn.west.isEmpty(this.collidesWith) &&
-            cn.north.east.isEmpty(this.collidesWith) &&
-            cn.north.west.isEmpty(this.collidesWith) &&
-            cn.south.east.isEmpty(this.collidesWith) &&
-            cn.south.west.isEmpty(this.collidesWith));
+      cn.north.isEmpty(this.collidesWith) &&
+      cn.south.isEmpty(this.collidesWith) &&
+      cn.east.isEmpty(this.collidesWith) &&
+      cn.west.isEmpty(this.collidesWith) &&
+      cn.north.east.isEmpty(this.collidesWith) &&
+      cn.north.west.isEmpty(this.collidesWith) &&
+      cn.south.east.isEmpty(this.collidesWith) &&
+      cn.south.west.isEmpty(this.collidesWith));
   };
   this.wrapPostMove = function () {
     if (this.x > Game.canvasWidth) {
@@ -375,9 +375,9 @@ Sprite = function () {
 
 Ship = function () {
   this.init("ship",
-            [-6,   7,
-              0, -11,
-              6,   7]);
+    [-6, 7,
+      0, -11,
+      6, 7]);
 
   this.color = 'navy';
   this.solid = true;
@@ -386,9 +386,9 @@ Ship = function () {
   this.children.exhaust.solid = true;
   this.children.exhaust.color = 'red';
   this.children.exhaust.init("exhaust",
-                             [-3,  6,
-                               0, 11,
-                               3,  6]);
+    [-3, 6,
+      0, 11,
+      3, 6]);
 
   this.delayBeforeBullet = 0;
 
@@ -406,7 +406,7 @@ Ship = function () {
     }
 
     if (KEY_STATUS.up) {
-      var rad = ((this.rot-90) * Math.PI)/180;
+      var rad = ((this.rot - 90) * Math.PI) / 180;
       this.acc.x = 0.5 * Math.cos(rad);
       this.acc.y = 0.5 * Math.sin(rad);
       this.children.exhaust.visible = Math.random() > 0.1;
@@ -421,11 +421,12 @@ Ship = function () {
     }
     if (KEY_STATUS.space) {
       if (this.delayBeforeBullet <= 0) {
+        this.delayBeforeBullet = 10;
         for (var i = 0; i < this.bullets.length; i++) {
           if (!this.bullets[i].visible) {
             SFX.laser();
             var bullet = this.bullets[i];
-            var rad = ((this.rot-90) * Math.PI)/180;
+            var rad = ((this.rot - 90) * Math.PI) / 180;
             var vectorx = Math.cos(rad);
             var vectory = Math.sin(rad);
             // move to the nose of the ship
@@ -462,29 +463,29 @@ Ship.prototype = new Sprite();
 
 BigAlien = function () {
   this.init("bigalien",
-            [-20,   0,
-             -12,  -4,
-              12,  -4,
-              20,   0,
-              12,   4,
-             -12,   4,
-             -20,   0,
-              20,   0]);
+    [-20, 0,
+    -12, -4,
+      12, -4,
+      20, 0,
+      12, 4,
+    -12, 4,
+    -20, 0,
+      20, 0]);
 
   this.children.top = new Sprite();
   this.children.top.init("bigalien_top",
-                         [-8, -4,
-                          -6, -6,
-                           6, -6,
-                           8, -4]);
+    [-8, -4,
+    -6, -6,
+      6, -6,
+      8, -4]);
   this.children.top.visible = true;
 
   this.children.bottom = new Sprite();
   this.children.bottom.init("bigalien_top",
-                            [ 8, 4,
-                              6, 6,
-                             -6, 6,
-                             -8, 4]);
+    [8, 4,
+      6, 6,
+      -6, 6,
+      -8, 4]);
   this.children.bottom.visible = true;
 
   this.collidesWith = ["asteroid", "ship", "bullet"];
@@ -575,7 +576,7 @@ BigAlien = function () {
     }
 
     if ((this.vel.x > 0 && this.x > Game.canvasWidth + 20) ||
-        (this.vel.x < 0 && this.x < -20)) {
+      (this.vel.x < 0 && this.x < -20)) {
       // why did the alien cross the road?
       this.visible = false;
       this.newPosition();
@@ -594,16 +595,16 @@ Bullet = function () {
   // to be other way around
   //this.collidesWith = ["asteroid"];
 
-  this.configureTransform = function () {};
+  this.configureTransform = function () { };
   this.draw = function () {
     if (this.visible) {
       this.context.save();
       this.context.lineWidth = 2;
       this.context.beginPath();
-      this.context.moveTo(this.x-1, this.y-1);
-      this.context.lineTo(this.x+1, this.y+1);
-      this.context.moveTo(this.x+1, this.y-1);
-      this.context.lineTo(this.x-1, this.y+1);
+      this.context.moveTo(this.x - 1, this.y - 1);
+      this.context.lineTo(this.x + 1, this.y + 1);
+      this.context.moveTo(this.x + 1, this.y - 1);
+      this.context.lineTo(this.x - 1, this.y + 1);
       this.context.stroke();
       this.context.restore();
     }
@@ -639,7 +640,7 @@ AlienBullet = function () {
       this.context.lineWidth = 2;
       this.context.beginPath();
       this.context.moveTo(this.x, this.y);
-      this.context.lineTo(this.x-this.vel.x, this.y-this.vel.y);
+      this.context.lineTo(this.x - this.vel.x, this.y - this.vel.y);
       this.context.stroke();
       this.context.restore();
     }
@@ -649,16 +650,16 @@ AlienBullet.prototype = new Bullet();
 
 Asteroid = function () {
   this.init("asteroid",
-            [-10,   0,
-              -5,   7,
-              -3,   4,
-               1,  10,
-               5,   4,
-              10,   0,
-               5,  -6,
-               2, -10,
-              -4, -10,
-              -4,  -5]);
+    [-10, 0,
+    -5, 7,
+    -3, 4,
+      1, 10,
+      5, 4,
+      10, 0,
+      5, -6,
+      2, -10,
+    -4, -10,
+    -4, -5]);
 
   this.color = 'lightgray';
   this.solid = true;
@@ -703,7 +704,7 @@ Explosion = function () {
     var rad = 2 * Math.PI * Math.random();
     var x = Math.cos(rad);
     var y = Math.sin(rad);
-    this.lines.push([x, y, x*2, y*2]);
+    this.lines.push([x, y, x * 2, y * 2]);
   }
 
   this.draw = function () {
@@ -736,14 +737,14 @@ Explosion.prototype = new Sprite();
 GridNode = function () {
   this.north = null;
   this.south = null;
-  this.east  = null;
-  this.west  = null;
+  this.east = null;
+  this.west = null;
 
   this.nextSprite = null;
 
   this.dupe = {
     horizontal: null,
-    vertical:   null
+    vertical: null
   };
 
   this.enter = function (sprite) {
@@ -762,7 +763,7 @@ GridNode = function () {
     }
   };
 
-  this.eachSprite = function(sprite, callback) {
+  this.eachSprite = function (sprite, callback) {
     var ref = this;
     while (ref.nextSprite) {
       ref = ref.nextSprite;
@@ -800,11 +801,11 @@ Text = {
       }
 
       var outlineLength = outline.length;
-      for (var i = 0; i < outlineLength; ) {
+      for (var i = 0; i < outlineLength;) {
 
         var action = outline[i++];
 
-        switch(action) {
+        switch (action) {
           case 'm':
             ctx.moveTo(outline[i++], outline[i++]);
             break;
@@ -831,7 +832,7 @@ Text = {
     }
   },
 
-  renderText: function(text, size, x, y) {
+  renderText: function (text, size, x, y) {
     this.context.save();
 
     this.context.translate(x, y);
@@ -854,7 +855,7 @@ Text = {
 };
 
 SFX = {
-  laser:     new Audio('39459__THE_bizniss__laser.wav'),
+  laser: new Audio('39459__THE_bizniss__laser.wav'),
   explosion: new Audio('51467__smcameron__missile_explosion.wav')
 };
 
@@ -932,7 +933,7 @@ Game = {
       this.state = 'waiting';
     },
     waiting: function () {
-      Text.renderText(window.ipad ? 'Touch Screen to Start' : 'Press Space to Start', 36, Game.canvasWidth/2 - 270, Game.canvasHeight/2);
+      Text.renderText(window.ipad ? 'Touch Screen to Start' : 'Press Space to Start', 36, Game.canvasWidth / 2 - 270, Game.canvasHeight / 2);
       if (KEY_STATUS.space || window.gameStart) {
         KEY_STATUS.space = false; // hack so we don't shoot right away
         window.gameStart = false;
@@ -944,7 +945,7 @@ Game = {
         if (Game.sprites[i].name == 'asteroid') {
           Game.sprites[i].die();
         } else if (Game.sprites[i].name == 'bullet' ||
-                   Game.sprites[i].name == 'bigalien') {
+          Game.sprites[i].name == 'bigalien') {
           Game.sprites[i].visible = false;
         }
       }
@@ -979,7 +980,7 @@ Game = {
         this.state = 'new_level';
       }
       if (!Game.bigAlien.visible &&
-          Date.now() > Game.nextBigAlienTime) {
+        Date.now() > Game.nextBigAlienTime) {
         Game.bigAlien.visible = true;
         Game.nextBigAlienTime = Date.now() + (30000 * Math.random());
       }
@@ -1012,7 +1013,7 @@ Game = {
       }
     },
     end_game: function () {
-      Text.renderText('GAME OVER', 50, Game.canvasWidth/2 - 160, Game.canvasHeight/2 + 10);
+      Text.renderText('GAME OVER', 50, Game.canvasWidth / 2 - 160, Game.canvasHeight / 2 + 10);
       if (this.timer == null) {
         this.timer = Date.now();
       }
@@ -1036,7 +1037,7 @@ Game = {
 
 $(function () {
   var canvas = $("#canvas");
-  Game.canvasWidth  = canvas.width();
+  Game.canvasWidth = canvas.width();
   Game.canvasHeight = canvas.height();
 
   var context = canvas[0].getContext("2d");
@@ -1057,23 +1058,23 @@ $(function () {
   // set up the positional references
   for (var i = 0; i < gridWidth; i++) {
     for (var j = 0; j < gridHeight; j++) {
-      var node   = grid[i][j];
-      node.north = grid[i][(j == 0) ? gridHeight-1 : j-1];
-      node.south = grid[i][(j == gridHeight-1) ? 0 : j+1];
-      node.west  = grid[(i == 0) ? gridWidth-1 : i-1][j];
-      node.east  = grid[(i == gridWidth-1) ? 0 : i+1][j];
+      var node = grid[i][j];
+      node.north = grid[i][(j == 0) ? gridHeight - 1 : j - 1];
+      node.south = grid[i][(j == gridHeight - 1) ? 0 : j + 1];
+      node.west = grid[(i == 0) ? gridWidth - 1 : i - 1][j];
+      node.east = grid[(i == gridWidth - 1) ? 0 : i + 1][j];
     }
   }
 
   // set up borders
   for (var i = 0; i < gridWidth; i++) {
-    grid[i][0].dupe.vertical            =  Game.canvasHeight;
-    grid[i][gridHeight-1].dupe.vertical = -Game.canvasHeight;
+    grid[i][0].dupe.vertical = Game.canvasHeight;
+    grid[i][gridHeight - 1].dupe.vertical = -Game.canvasHeight;
   }
 
   for (var j = 0; j < gridHeight; j++) {
-    grid[0][j].dupe.horizontal           =  Game.canvasWidth;
-    grid[gridWidth-1][j].dupe.horizontal = -Game.canvasWidth;
+    grid[0][j].dupe.horizontal = Game.canvasWidth;
+    grid[gridWidth - 1][j].dupe.horizontal = -Game.canvasWidth;
   }
 
   var sprites = [];
@@ -1081,8 +1082,8 @@ $(function () {
 
   // so all the sprites can use it
   Sprite.prototype.context = context;
-  Sprite.prototype.grid    = grid;
-  Sprite.prototype.matrix  = new Matrix(2, 3);
+  Sprite.prototype.grid = grid;
+  Sprite.prototype.matrix = new Matrix(2, 3);
 
   var ship = new Ship();
 
@@ -1129,14 +1130,14 @@ $(function () {
   // from here:
   // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
   window.requestAnimFrame = (function () {
-    return  window.requestAnimationFrame       ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame    ||
-            window.oRequestAnimationFrame      ||
-            window.msRequestAnimationFrame     ||
-            function (/* function */ callback, /* DOMElement */ element) {
-              window.setTimeout(callback, 1000 / 60);
-            };
+    return window.requestAnimationFrame ||
+      window.webkitRequestAnimationFrame ||
+      window.mozRequestAnimationFrame ||
+      window.oRequestAnimationFrame ||
+      window.msRequestAnimationFrame ||
+      function (/* function */ callback, /* DOMElement */ element) {
+        window.setTimeout(callback, 1000 / 60);
+      };
   })();
 
   var mainLoop = function () {
@@ -1175,7 +1176,7 @@ $(function () {
     }
 
     // score
-    var score_text = ''+Game.score;
+    var score_text = '' + Game.score;
     Text.renderText(score_text, 21, Game.canvasWidth - 16 * score_text.length, 25);
 
     // extra dudes
@@ -1189,7 +1190,7 @@ $(function () {
     }
 
     if (showFramerate) {
-      Text.renderText(''+avgFramerate, 24, Game.canvasWidth - 38, Game.canvasHeight - 2);
+      Text.renderText('' + avgFramerate, 24, Game.canvasWidth - 38, Game.canvasHeight - 2);
     }
 
     frameCount++;
@@ -1201,7 +1202,7 @@ $(function () {
     }
 
     if (paused) {
-      Text.renderText('PAUSED', 72, Game.canvasWidth/2 - 160, 120);
+      Text.renderText('PAUSED', 72, Game.canvasWidth / 2 - 160, 120);
     } else {
       requestAnimFrame(mainLoop, canvasNode);
     }
