@@ -112,9 +112,9 @@ Sprite = function () {
     return this.collidesWith;
   }
 
-  this.x     = 0;
-  this.y     = 0;
-  this.rot   = 0;
+  this.x = 0;
+  this.y = 0;
+  this.rot = 0;
   this.scale = 1;
 
   this.currentNode = null;
@@ -361,14 +361,14 @@ Sprite = function () {
     }
 
     return (cn.isEmpty(interferesWith) &&
-            cn.north.isEmpty(interferesWith) &&
-            cn.south.isEmpty(interferesWith) &&
-            cn.east.isEmpty(interferesWith) &&
-            cn.west.isEmpty(interferesWith) &&
-            cn.north.east.isEmpty(interferesWith) &&
-            cn.north.west.isEmpty(interferesWith) &&
-            cn.south.east.isEmpty(interferesWith) &&
-            cn.south.west.isEmpty(interferesWith));
+      cn.north.isEmpty(interferesWith) &&
+      cn.south.isEmpty(interferesWith) &&
+      cn.east.isEmpty(interferesWith) &&
+      cn.west.isEmpty(interferesWith) &&
+      cn.north.east.isEmpty(interferesWith) &&
+      cn.north.west.isEmpty(interferesWith) &&
+      cn.south.east.isEmpty(interferesWith) &&
+      cn.south.west.isEmpty(interferesWith));
   };
   this.wrapPostMove = function () {
     if (this.x > Game.canvasWidth) {
@@ -411,12 +411,12 @@ Ship = function () {
     return ["asteroid", "bigalien", "alienbullet"];
   }
 
-  this.shoot = function() {
+  this.shoot = function () {
     for (var i = 0; i < this.bullets.length; i++) {
       if (!this.bullets[i].visible) {
         SFX.laser();
         var bullet = this.bullets[i];
-        var rad = ((this.rot-90) * Math.PI)/180;
+        var rad = ((this.rot - 90) * Math.PI) / 180;
         var vectorx = Math.cos(rad);
         var vectory = Math.sin(rad);
         // move to the nose of the ship
@@ -719,10 +719,13 @@ Asteroid.prototype = new Sprite();
 
 Coin = function () {
   this.init("coin",
-            [-5,  0,
-              0,  5,
-              5,  0,
-              0, -5]);
+    [-5, 0,
+      0, 5,
+      5, 0,
+      0, -5]);
+
+  this.color = 'yellow';
+  this.solid = true;
 
   this.collidesWith = ["ship"];
 
@@ -1046,7 +1049,7 @@ Game = {
         Game.nextBigAlienTime = Date.now() + (30000 * Math.random());
       }
       if (!Game.coin.visible &&
-          Date.now() > Game.nextCoinTime) {
+        Date.now() > Game.nextCoinTime) {
         Game.coin.visible = true;
       }
     },
